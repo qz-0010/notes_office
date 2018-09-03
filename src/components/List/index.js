@@ -3,8 +3,12 @@ import { connect } from 'react-redux';
 import Head from './Head';
 import CardView from './CardView';
 import RowView from './RowView';
+const ru_monthes = {
+  'jun': 'Июнь',
+  'jul': 'Июль'
+}
 
-export default class List extends React.Component {
+class List extends React.Component {
   constructor(props) {
     super(props);
 
@@ -12,9 +16,13 @@ export default class List extends React.Component {
       activeView: 'rows',
       activeMonths: ['jun']
     }
+
+    this.onViewBtnClick = this.onViewBtnClick.bind(this);
+    this.toggleSection = this.toggleSection.bind(this);
   }
 
   onViewBtnClick(e) {
+    debugger;
     this.setState({
       activeView: e.target.name
     });
@@ -34,7 +42,8 @@ export default class List extends React.Component {
   }
 
   render() {
-    const list = this.props;
+    const self = this;
+    const { list } = this.props;
     const months = Object.keys(list);
     const listViews = {
       'cards': CardView,
@@ -46,24 +55,30 @@ export default class List extends React.Component {
         <Head onViewBtnClick={this.onViewBtnClick} activeView={this.state.activeView} />
         {months.map((month) => {
           let renderBodySection = () => {
-            if(!this.state.activeMonths.indexOf(month) === -1) return false;
+            if(self.state.activeMonths.indexOf(month) === -1) return false;
 
-            let ItemView = listViews[this.state.view];
-
+            let ItemView = listViews[self.state.activeView];
+            let Items = list[month].map((item) => (
+              <ItemView></ItemView>
+            ))
+            debugger;
             return (
               <div className="list__section-body">
-                {list[month].map( (item) => (<ItemView {...item} />) )}
+                {Items}
               </div>
             )
           }
-          
+
           return (
             <section className="list__section">
               <header className="list__section-head">
                 <h6 className="list__section-title">{ru_monthes[month]}</h6>
-                <span className="list__toggle-btn" data-month=`${month}` onClick={this.toggleSection}>angle</span>
+                <span className="list__toggle-btn" data-month={month} onClick={this.toggleSection}>angle</span>
               </header>
-              {renderBodySection()}
+              {/*{renderBodySection()}*/}
+              {list[month].map((item, i) => (
+                <RowView key={i}></RowView>
+              ))}
             </section>
           )
         })}
@@ -76,4 +91,4 @@ const mapStateToProps = state => ({
   list: state.list
 });
 
-export default connect(mapStateToProps, { authorize })(Admin);
+export default connect(mapStateToProps, { })(List);

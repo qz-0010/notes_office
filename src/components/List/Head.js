@@ -2,32 +2,27 @@ import React from 'react';
 import classnames from 'classnames';
 
 const Head = (props) => {
-  var btnState = {
-    'cards': { val: 'Карточки', active: false },
-    'rows': { val: 'Список', active: false }
+  var buttons = {
+    'cards': { val: 'Карточки' },
+    'rows': { val: 'Список' }
   };
 
-  const onViewBtnClick = (e) => {
-    let { name } = e.target;
-
-    btnState[name].active = name === props.activeView;
-
-    props.onViewBtnClick(e);
-  }
-
+  debugger;
   return (
     <header className="list__head">
       <div className="list__head-item">
       </div>
       <div className="list__head-item">
-        {Object.keys(btnState).map((name) => (
-          let btn = btnState[name];
+        {Object.keys(buttons).map((name) => {
+          let btn = buttons[name];
 
-          <button type="button" name={name} onClick={onViewBtnClick} className={classnames({
-            'list__view-btn': true,
-            'active': btn.active
-          })}>btn.val</button>
-        ))}
+          return (
+            <button type="button" name={name} onClick={props.onViewBtnClick} className={classnames({
+              'list__view-btn': true,
+              'active': props.activeView === name
+            })}>{btn.val}{btn.active}</button>
+          )
+        })}
       </div>
     </header>
   )
